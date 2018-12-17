@@ -2,6 +2,10 @@
 
 A screensharing web app built with phoenix.
 
+## References
+
+- https://webrtc.github.io/samples/src/content/getusermedia/getdisplaymedia/
+
 ---
 
 To start your Phoenix server:
