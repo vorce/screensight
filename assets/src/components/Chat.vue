@@ -38,7 +38,7 @@
   </div>
 </template>
 <script>
-  import {Socket, Presence} from "phoenix"
+  import {Channel, Presence} from "phoenix"
 
   function generateUUID() {
     var d = new Date().getTime();
@@ -52,10 +52,11 @@
 
   export default {
     name: 'chat',
+    props: {
+      channel: Channel,
+      username: String
+    },
     mounted() {
-      let socket = new Socket("/socket", {params: {token: window.userToken, user_id: this.username}})
-      socket.connect();
-      this.channel = socket.channel("room:example-room", {});
       let presence = new Presence(this.channel)
       presence.onSync(() => this.updateOnlineUsers(presence))
       this.channel.join()
@@ -72,7 +73,6 @@
           message: '',
         },
         onlineUsers: [],
-        username: window.location.search.split("=")[1] || generateUUID(),
         messages: []
       }
     },
