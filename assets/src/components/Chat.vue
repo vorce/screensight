@@ -1,10 +1,15 @@
 <template>
   <div id="chat" class="siimple-content siimple-content--fluid">
     <h3>Chat</h3>
-    <div id="presence" class="siimple-alert siimple-alert--info">
-      <span v-for="user of onlineUsers" class="siimple-tag siimple-tag--light">
-        {{ user.name }} ({{ user.count }})
-      </span>
+    <div id="presence" class="siimple-card">
+      <div class="siimple-card-header">
+        Users ({{ onlineUsers.length }})
+      </div>
+      <div class="siimple-card-body">
+        <span v-for="user of onlineUsers" class="siimple-tag siimple-tag--light siimple--mr-1">
+          {{ user.name }} ({{ user.count }})
+        </span>
+      </div>
     </div>
     <div id="messages" class="siimple-list">
       <div v-for="message of messages" class="siimple-list-item">
@@ -31,7 +36,7 @@
   export default {
     name: 'chat',
     mounted() {
-      let socket = new Socket("/socket", {params: {token: window.userToken}})
+      let socket = new Socket("/socket", {params: {token: window.userToken, user_id: this.username}})
       socket.connect();
       this.channel = socket.channel("room:example-room", {});
       let presence = new Presence(this.channel)
@@ -50,7 +55,7 @@
           message: '',
         },
         onlineUsers: [],
-        username: window.location.search.split("=")[1] || generateUUID(),
+        username: (window.location.search.split("=")[1] || generateUUID()).substring(0, 16),
         messages: []
       }
     },
