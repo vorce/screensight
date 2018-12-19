@@ -7,13 +7,13 @@
       </div>
       <div class="siimple-card-body">
         <span v-for="user of onlineUsers" class="siimple-tag siimple-tag--light siimple--mr-1">
-          {{ user.name }} ({{ user.count }})
+          {{ user.name.substring(0, 20) }} ({{ user.count }})
         </span>
       </div>
     </div>
     <div id="messages" class="siimple-list">
       <div v-for="message of messages" class="siimple-list-item">
-        <div class="siimple-list-title">{{ message.user }}</div>
+        <div class="siimple-list-title">{{ message.user.substring(0, 20) }}</div>
         <span> {{ message.body}} </span>
       </div>
     </div>
@@ -55,7 +55,7 @@
           message: '',
         },
         onlineUsers: [],
-        username: (window.location.search.split("=")[1] || generateUUID()).substring(0, 16),
+        username: window.location.search.split("=")[1] || generateUUID(),
         messages: []
       }
     },
