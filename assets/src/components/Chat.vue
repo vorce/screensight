@@ -43,7 +43,7 @@
         form: {
           message: '',
         },
-        user: generateUUID(),
+        user: window.location.search.split("=")[1] || generateUUID(),
         messages: []
       }
     },
