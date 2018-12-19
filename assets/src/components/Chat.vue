@@ -8,7 +8,7 @@
         <span> {{ message.body}} </span>
       </div>
     </div>
-    <input v-model="form.message" type="text" class="siimple-input" placeholder="Hello :D"> <div @click="sendMessage" class="siimple-btn siimple-btn--blue">Send</div>
+    <input v-model="form.message" type="text" class="siimple-input" placeholder="..." v-on:keyup.enter="sendMessage"> <div @click="sendMessage" class="siimple-btn siimple-btn--blue">Send</div>
   </div>
 </template>
 <script>
@@ -53,9 +53,10 @@
           body: this.form.message,
           user: this.user
         }
-        // we gonna replace this console log with  a socket client call
+
         console.log("Sending to room", payload)
         this.channel.push("new:chat:message", payload)
+        this.form.message = ''
       }
     }
   }
