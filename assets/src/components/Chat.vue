@@ -1,7 +1,9 @@
 <template>
   <div class="chat">
     <h3>Chat</h3>
-    <!-- <div id="chat-messages" class="siimple-alert siimple-alert--info"> -->
+    <div v-for="user of onlineUsers" class="siimple-alert siimple-alert--info">
+      <span>{{ user.name }} (count: {{ user.count }})</span>
+    </div>
     <div class="siimple-list" style="max-width:800px;">
       <div v-for="message of messages" class="siimple-list-item" style="max-width:800px;">
         <div class="siimple-list-title">{{ message.user }}</div>
@@ -12,7 +14,7 @@
   </div>
 </template>
 <script>
-  import {Socket} from "phoenix"
+  import {Socket, Presence} from "phoenix"
 
   function generateUUID() {
     var d = new Date().getTime();
@@ -30,6 +32,8 @@
       let socket = new Socket("/socket", {params: {token: window.userToken}})
       socket.connect();
       this.channel = socket.channel("room:example-room", {});
+      let presence = new Presence(this.channel)
+      presence.onSync(() => this.updateOnlineUsers(presence))
       this.channel.join()
         .receive("ok", resp => { console.log("Joined chat successfully", resp) })
         .receive("error", resp => { console.log("Unable to join chat", resp) })
@@ -43,7 +47,8 @@
         form: {
           message: '',
         },
-        user: window.location.search.split("=")[1] || generateUUID(),
+        onlineUsers: [],
+        username: window.location.search.split("=")[1] || generateUUID(),
         messages: []
       }
     },
@@ -51,12 +56,22 @@
       sendMessage: function () {
         let payload = {
           body: this.form.message,
-          user: this.user
+          user: this.username
         }
 
         console.log("Sending to room", payload)
         this.channel.push("new:chat:message", payload)
         this.form.message = ''
+      },
+      updateOnlineUsers: function(presence) {
+        let newOnlineUsers = []
+        console.log("Updating online users...")
+        presence.list((id, {metas: [first, ...rest]}) => {
+          let count = rest.length + 1
+          newOnlineUsers.push({name: id, count: count})
+        })
+        console.log("New onlineUsers", newOnlineUsers)
+        this.onlineUsers = newOnlineUsers;
       }
     }
   }

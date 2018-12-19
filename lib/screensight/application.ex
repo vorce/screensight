@@ -9,7 +9,8 @@ defmodule Screensight.Application do
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
-      ScreensightWeb.Endpoint
+      ScreensightWeb.Endpoint,
+      ScreensightWeb.Presence
       # Starts a worker by calling: Screensight.Worker.start_link(arg)
       # {Screensight.Worker, arg},
     ]
