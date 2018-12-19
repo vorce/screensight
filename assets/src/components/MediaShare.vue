@@ -1,5 +1,5 @@
 <template>
-  <div class="screenshare">
+  <div id="screenshare" class="siimple-content siimple-content--fluid">
     <h3>Screenshare</h3>
     <div @click="toggleShareScreen" class="siimple-btn siimple-btn--blue">🎥</div> <div @click="toggleShareMicrophone" class="siimple-btn siimple-btn--blue">🎙</div>
   </div>

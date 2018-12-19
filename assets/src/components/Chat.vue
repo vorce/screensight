@@ -1,11 +1,13 @@
 <template>
-  <div class="chat">
+  <div id="chat" class="siimple-content siimple-content--fluid">
     <h3>Chat</h3>
-    <div v-for="user of onlineUsers" class="siimple-alert siimple-alert--info">
-      <span>{{ user.name }} (count: {{ user.count }})</span>
+    <div id="presence" class="siimple-alert siimple-alert--info">
+      <span v-for="user of onlineUsers" class="siimple-tag siimple-tag--light">
+        {{ user.name }} ({{ user.count }})
+      </span>
     </div>
-    <div class="siimple-list" style="max-width:800px;">
-      <div v-for="message of messages" class="siimple-list-item" style="max-width:800px;">
+    <div id="messages" class="siimple-list">
+      <div v-for="message of messages" class="siimple-list-item">
         <div class="siimple-list-title">{{ message.user }}</div>
         <span> {{ message.body}} </span>
       </div>
