@@ -40,6 +40,12 @@
         console.log("got video chunk...")
         // this.mediaChunks.video.push(payload.videoChunk)
         // this.recording = window.URL.createObjectURL(new Blob([payload.videoChunk], {type: 'video/webm'}));
+      })
+      this.channel.on('new:peer:offer', payload => {
+        this.gotRemoteDescription(payload);
+      })
+      this.channel.on('new:peer:candidate', payload => {
+        this.gotRemoteIceCandidate(payload);
       });
     },
     data() {
@@ -52,7 +58,8 @@
         },
         mediaRecorder: null,
         recording: null,
-        stream: new MediaStream()
+        stream: new MediaStream(),
+        peerConnection: null
       }
     },
     methods: {
@@ -87,11 +94,60 @@
         console.log("Sucessfully got user media device, starting media recorder")
         this.screenShareOn = true
         this.stream = stream
+        this.setupPeerConnection(stream);
         document.getElementById('screenshare-video').srcObject = stream
         let options = {mimeType: 'video/webm'}
         this.mediaRecorder = new MediaRecorder(stream);
         this.mediaRecorder.ondataavailable = this.mediaDataAvailable
         this.mediaRecorder.start(10);
+        this.peerConnection.createOffer(this.gotLocalDescription, function(error) { console.log(error.name + ": " + error.message) });
+      },
+
+      setupPeerConnection: function(stream) {
+        let servers = {'iceServers': [{'url': 'stun:stun.services.mozilla.com'}, {'url': 'stun:stun.l.google.com:19302'}]};
+
+        this.peerConnection = new RTCPeerConnection(servers);
+        console.log("Created local peer connection");
+        this.peerConnection.onicecandidate = this.gotLocalIceCandidate;
+        this.peerConnection.ontrack = this.gotRemoteStream;
+        this.peerConnection.addStream(stream);
+        console.log("Added localStream to localPeerConnection");
+      },
+
+      gotLocalDescription: function(description) {
+        this.peerConnection.setLocalDescription(description, () => {
+          this.channel.push("new:peer:offer", {
+              sdp: peerConnection.localDescription
+          });
+        }, function(error) { console.log(error.name + ": " + error.message) });
+        console.log("Offer from localPeerConnection: \n" + description.sdp);
+      },
+
+      gotRemoteDescription: function(description) {
+        console.log("Answer from remotePeerConnection: \n" + description.sdp);
+        this.peerConnection.setRemoteDescription(new RTCSessionDescription(description.sdp));
+        this.peerConnection.createAnswer(this.gotLocalDescription, function(error) { console.log(error.name + ": " + error.message) });
+      },
+
+      gotRemoteStream: function(event) {
+        document.getElementById('screenshare-video').srcObject = event.stream
+        console.log("Received remote stream");
+      },
+
+      gotLocalIceCandidate: function(event) {
+        if (event.candidate) {
+          console.log("Local ICE candidate: \n" + event.candidate.candidate);
+          this.channel.push("new:peer:candidate", {
+            candidate: event.candidate
+          });
+        }
+      },
+
+      gotRemoteIceCandidate: function(event) {
+        if(event.candidate) {
+          this.peerConnection.addIceCandidate(new RTCIceCandidate(event.candidate));
+          console.log("Remote ICE candidate: \n " + event.candidate.candidate);
+        }
       },
 
       startScreenCapture: function () {

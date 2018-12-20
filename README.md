@@ -5,6 +5,7 @@ A screensharing web app built with phoenix.
 ## References
 
 - https://webrtc.github.io/samples/src/content/getusermedia/getdisplaymedia/
+- https://hashrocket.com/blog/posts/implementing-video-chat-in-a-phoenix-application-with-webrtc
 
 ---
 

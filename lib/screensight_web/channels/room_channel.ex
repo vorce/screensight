@@ -18,6 +18,11 @@ defmodule ScreensightWeb.RoomChannel do
     {:noreply, socket}
   end
 
+  def handle_in("new:peer:" <> _rest = type, payload, socket) do
+    broadcast!(socket, type, payload)
+    {:noreply, socket}
+  end
+
   def handle_info(:after_join, socket) do
     push(socket, "presence_state", Presence.list(socket))
 

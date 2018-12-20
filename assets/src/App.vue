@@ -28,6 +28,16 @@
   import MediaShare from './components/MediaShare'
   import {Socket} from "phoenix"
 
+  function generateUUID() {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+  }
+
   export default {
     name: 'app',
     components: {
@@ -42,7 +52,8 @@
     },
     data() {
       return {
-        username: window.location.search.split("=")[1] || generateUUID(),
+        username: window.location.search.split("=")[1] || "anonymous",
+        instanceId: generateUUID(),
         channels: {
           chat: null,
           media: null
