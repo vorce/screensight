@@ -10,7 +10,7 @@
                 Username
             </div>
             <div class="siimple-card-body">
-              <video width="100%" height="100%" id="screenshare-video" autoplay playsinline :src=stream></video>
+              <video width="100%" height="100%" id="screenshare-video" autoplay playsinline></video>
             </div>
             <div class="siimple-card-footer">
                 Card footer
@@ -55,16 +55,24 @@
         stream: null
       }
     },
+    watch: {
+      stream: function (newValue, oldValue) {
+        console.log("Watch for stream", {new: newValue, old: oldValue})
+        if(oldValue == null && !!newValue) {
+          document.getElementById('screenshare-video').srcObject = newValue
+        }
+      }
+    },
     methods: {
       toggleShareScreen: function () {
         if(this.screenShareOn) {
           console.log("Stop screen share")
+          this.screenShareOn = false
           this.stopScreenCapture()
         } else {
           console.log("Start screen share")
-          this.startScreenCapture()
+          return this.startScreenCapture()
         }
-        this.screenShareOn = !this.screenShareOn
       },
 
       toggleShareMicrophone: function () {
@@ -78,13 +86,18 @@
 
       mediaDataAvailable: function (event) {
         if (event.data && event.data.size > 0) {
-          this.channel.push('new:video:chunk', {videoChunk: event.data, user: this.username});
+          console.log("mediaDataAvailable")
+          // this.channel.push('new:video:chunk', {videoChunk: event.data, user: this.username});
         }
       },
 
       captureSuccess: function(stream) {
+        console.log("Sucessfully got user media device, starting media recorder")
+        this.screenShareOn = true
         this.stream = stream
-        this.mediaRecorder = new MediaRecorder(stream, {mimeType: 'video/webm'});
+        document.getElementById('screenshare-video').srcObject = stream
+        let options = {mimeType: 'video/webm'}
+        this.mediaRecorder = new MediaRecorder(stream);
         this.mediaRecorder.ondataavailable = this.mediaDataAvailable
         this.mediaRecorder.start(10);
       },
@@ -93,15 +106,20 @@
         let onError = function(err) {
           console.log('The following error occured: ' + err);
         }
-        let constraints = {video: {mediaSource: 'screen'}}
+        let constraints = {video: {mediaSource: 'screen'}} // {video: true}
         navigator.mediaDevices.getUserMedia(constraints).then(this.captureSuccess, onError);
       },
 
       stopScreenCapture: function () {
-        this.mediaRecorder.stop();
-        this.mediaRecorder = null;
-        this.stream.getTracks().forEach(track => track.stop());
-        this.stream = null;
+        if(this.mediaRecorder && this.mediaRecorder.state == 'recording') {
+          this.mediaRecorder.stop();
+          this.mediaRecorder = null;
+        }
+
+        if(this.stream) {
+          this.stream.getTracks().forEach(track => track.stop());
+          this.stream = null;
+        }
       }
     }
   }
