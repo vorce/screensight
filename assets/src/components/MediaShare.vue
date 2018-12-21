@@ -10,7 +10,8 @@
                 Username
             </div>
             <div class="siimple-card-body">
-              <video width="100%" height="100%" id="screenshare-video" autoplay playsinline></video>
+              <!-- <video width="100%" height="100%" id="screenshare-video" autoplay playsinline></video> -->
+              <video width="100%" height="100%" id="screenshare-video" autoplay playsinline :srcObject="stream"></video>
             </div>
             <div class="siimple-card-footer">
                 Card footer
@@ -52,15 +53,7 @@
         },
         mediaRecorder: null,
         recording: null,
-        stream: null
-      }
-    },
-    watch: {
-      stream: function (newValue, oldValue) {
-        console.log("Watch for stream", {new: newValue, old: oldValue})
-        if(oldValue == null && !!newValue) {
-          document.getElementById('screenshare-video').srcObject = newValue
-        }
+        stream: new MediaStream()
       }
     },
     methods: {
@@ -86,7 +79,7 @@
 
       mediaDataAvailable: function (event) {
         if (event.data && event.data.size > 0) {
-          console.log("mediaDataAvailable")
+          // console.log("mediaDataAvailable")
           // this.channel.push('new:video:chunk', {videoChunk: event.data, user: this.username});
         }
       },
