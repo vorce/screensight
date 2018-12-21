@@ -10,7 +10,17 @@
                 Username
             </div>
             <div class="siimple-card-body">
-              <video width="100%" height="100%" id="screenshare-video" autoplay playsinline :srcObject="stream"></video>
+              <div class="siimple-grid">
+                <div class="siimple-grid-row">
+                  <div class="siimple-grid-col siimple-grid-col--4">
+                    <video width="100%" height="100%" id="local-screenshare-video" autoplay playsinline :srcObject="stream"></video>
+                  </div>
+                  <div class="siimple-grid-col siimple-grid-col--8">
+                    <video width="100%" height="100%" id="remote-screenshare-video" autoplay playsinline></video>
+                  </div>
+                </div>
+              </div>
+              
             </div>
             <div class="siimple-card-footer">
                 Card footer
