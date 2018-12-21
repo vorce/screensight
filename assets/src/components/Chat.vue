@@ -1,34 +1,32 @@
 <template>
-  <div id="chat" class="siimple-content siimple-content--fluid">
-    <div class="siimple-grid">
-      <div class="siimple-grid-row">
-        <h3>Chat</h3>
-      </div>
-  
-      <div class="siimple-grid-row">
-        <div id="presence" class="siimple-card">
-          <div class="siimple-card-header">
-            Users ({{ onlineUsers.length }})
-          </div>
-          <div class="siimple-card-body">
-            <span v-for="user of onlineUsers" class="siimple-tag siimple-tag--light siimple--mr-1">
-              {{ user.name.substring(0, 20) }} ({{ user.count }})
-            </span>
-          </div>
+  <div class="siimple-grid">
+    <div class="siimple-grid-row">
+      <h3>Chat</h3>
+    </div>
+
+    <div class="siimple-grid-row">
+      <div id="presence" class="siimple-card">
+        <div class="siimple-card-header">
+          Users ({{ onlineUsers.length }})
+        </div>
+        <div class="siimple-card-body">
+          <span v-for="user of onlineUsers" class="siimple-tag siimple-tag--light siimple--mr-1">
+            {{ user.name.substring(0, 20) }} ({{ user.count }})
+          </span>
         </div>
       </div>
-      <div class="siimple-grid-row">
-        <div id="messages" class="siimple-list">
-          <div v-for="message of messages" class="siimple-list-item">
-            <div class="siimple-list-title">{{ message.user.substring(0, 20) }}</div>
-            <span> {{ message.body}} </span>
-          </div>
+    </div>
+    <div class="siimple-grid-row">
+      <div id="messages" class="siimple-list">
+        <div v-for="message of messages" class="siimple-list-item">
+          <div class="siimple-list-title">{{ message.user.substring(0, 20) }}</div>
+          <span>{{ message.body }}</span>
         </div>
       </div>
-      <div class="siimple-grid-row">
-        <div class="siimple-rule"></div>
-        <input v-model="form.message" type="text" class="siimple-input siimple-input--fluid" placeholder="" v-on:keyup.enter="sendMessage">
-      </div>
+    </div>
+    <div class="siimple-grid-row">
+      <div class="siimple-rule"></div>
+      <input v-model="message" type="text" class="siimple-input siimple-input--fluid" placeholder="" v-on:keyup.enter="sendMessage">
     </div>
   </div>
 </template>
@@ -54,27 +52,25 @@
     },
     data() {
       return {
-        form: {
-          message: '',
-        },
+        message: '',
         onlineUsers: [],
         messages: []
       }
     },
     methods: {
       sendMessage: function () {
-        if(this.form.message == '') {
+        if(this.message == '') {
           return;
         }
 
         let payload = {
-          body: this.form.message,
+          body: this.message,
           user: this.username
         }
 
         console.log("Sending to room", payload)
         this.channel.push("new:chat:message", payload)
-        this.form.message = ''
+        this.message = ''
       },
       updateOnlineUsers: function(presence) {
         let newOnlineUsers = []
@@ -89,8 +85,3 @@
     }
   }
 </script>
-<style scoped>
-    p {
-        margin-top: 40px;
-    }
-</style>

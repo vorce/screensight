@@ -1,25 +1,23 @@
 <template>
-  <div id="screenshare" class="siimple-content siimple-content--fluid">
-    <div class="siimple-grid">
-      <div class="siimple-grid-row">
-          <h3>Screenshare</h3>
+  <div class="siimple-grid">
+    <div class="siimple-grid-row">
+        <h3>Screenshare</h3>
+    </div>
+    <div class="siimple-grid-row">
+      <div class="siimple-card">
+          <div class="siimple-card-header">
+            Username
+          </div>
+          <div class="siimple-card-body">
+            <video width="100%" height="100%" id="screenshare-video" autoplay playsinline :srcObject="stream"></video>
+          </div>
+          <div class="siimple-card-footer">
+              <div class="siimple-spinner siimple-spinner--success" v-if="screenShareOn"></div>
+          </div>
       </div>
-      <div class="siimple-grid-row">
-        <div class="siimple-card">
-            <div class="siimple-card-header">
-              Username
-            </div>
-            <div class="siimple-card-body">
-              <video width="100%" height="100%" id="screenshare-video" autoplay playsinline :srcObject="stream"></video>
-            </div>
-            <div class="siimple-card-footer">
-                <div class="siimple-spinner siimple-spinner--success" v-if="screenShareOn"></div>
-            </div>
-        </div>
-      </div>
-      <div class="siimple-grid-row">
-        <div @click="toggleShareScreen" class="siimple-btn siimple-btn--blue">🎥</div> <div @click="toggleShareMicrophone" class="siimple-btn siimple-btn--blue">🎙</div>
-      </div>
+    </div>
+    <div class="siimple-grid-row">
+      <div @click="toggleShareScreen" class="siimple-btn siimple-btn--blue">🎥</div> <div @click="toggleShareMicrophone" class="siimple-btn siimple-btn--blue">🎙</div>
     </div>
   </div>
 </template>
