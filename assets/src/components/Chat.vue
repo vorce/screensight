@@ -27,11 +27,11 @@
       </div>
       <div class="siimple-grid-row">
         <div class="siimple-rule"></div>
-        <div class="siimple-grid-col siimple-grid-col--10">
-          <input v-model="form.message" type="text" class="siimple-input siimple-input--fluid" placeholder="..." v-on:keyup.enter="sendMessage">
+        <div class="siimple-grid-col siimple-grid-col--11">
+          <input v-model="form.message" type="text" class="siimple-input siimple-input--fluid" placeholder="" v-on:keyup.enter="sendMessage">
         </div>
-        <div class="siimple-grid-col siimple-grid-col--2">
-           <div @click="sendMessage" class="siimple-btn siimple-btn--blue">💬</div>
+        <div class="siimple-grid-col siimple-grid-col--1">
+           <div @click="sendMessage" class="siimple-btn siimple-btn--blue"> </div>
         </div>
       </div>
     </div>
