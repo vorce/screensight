@@ -10,7 +10,6 @@
                 Username
             </div>
             <div class="siimple-card-body">
-              <!-- <video width="100%" height="100%" id="screenshare-video" autoplay playsinline></video> -->
               <video width="100%" height="100%" id="screenshare-video" autoplay playsinline :srcObject="stream"></video>
             </div>
             <div class="siimple-card-footer">

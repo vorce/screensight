@@ -68,6 +68,7 @@ defmodule ScreensightWeb.Presence do
   information, while maintaining the required `:metas` field from the
   original presence data.
   """
-  use Phoenix.Presence, otp_app: :screensight,
-                        pubsub_server: Screensight.PubSub
+  use Phoenix.Presence,
+    otp_app: :screensight,
+    pubsub_server: Screensight.PubSub
 end
