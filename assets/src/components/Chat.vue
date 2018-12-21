@@ -27,28 +27,13 @@
       </div>
       <div class="siimple-grid-row">
         <div class="siimple-rule"></div>
-        <div class="siimple-grid-col siimple-grid-col--11">
-          <input v-model="form.message" type="text" class="siimple-input siimple-input--fluid" placeholder="" v-on:keyup.enter="sendMessage">
-        </div>
-        <div class="siimple-grid-col siimple-grid-col--1">
-           <div @click="sendMessage" class="siimple-btn siimple-btn--blue"> </div>
-        </div>
+        <input v-model="form.message" type="text" class="siimple-input siimple-input--fluid" placeholder="" v-on:keyup.enter="sendMessage">
       </div>
     </div>
   </div>
 </template>
 <script>
   import {Channel, Presence} from "phoenix"
-
-  function generateUUID() {
-    var d = new Date().getTime();
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = (d + Math.random()*16)%16 | 0;
-        d = Math.floor(d/16);
-        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-    });
-    return uuid;
-  }
 
   export default {
     name: 'chat',
@@ -78,6 +63,10 @@
     },
     methods: {
       sendMessage: function () {
+        if(this.form.message == '') {
+          return;
+        }
+
         let payload = {
           body: this.form.message,
           user: this.username
