@@ -7,13 +7,13 @@
       <div class="siimple-grid-row">
         <div class="siimple-card">
             <div class="siimple-card-header">
-                Username
+              Username
             </div>
             <div class="siimple-card-body">
               <video width="100%" height="100%" id="screenshare-video" autoplay playsinline :srcObject="stream"></video>
             </div>
             <div class="siimple-card-footer">
-                Card footer
+                <div class="siimple-spinner siimple-spinner--success" v-if="screenShareOn"></div>
             </div>
         </div>
       </div>
